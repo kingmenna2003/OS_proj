@@ -6,8 +6,8 @@
 // 00001000 -- boot ROM, provided by qemu
 // 02000000 -- CLINT
 // 0C000000 -- PLIC
-// 10000000 -- uart0 
-// 10001000 -- virtio disk 
+// 10000000 -- uart0
+// 10001000 -- virtio disk
 // 80000000 -- boot ROM jumps here in machine mode
 //             -kernel loads the kernel here
 // unused RAM after 80000000.
@@ -21,6 +21,10 @@
 #define UART0 0x10000000L
 #define UART0_IRQ 10
 
+
+#define CLINT_MTIME 0x200bff8UL
+
+
 // virtio mmio interface
 #define VIRTIO0 0x10001000
 #define VIRTIO0_IRQ 1
@@ -32,6 +36,8 @@
 #define PLIC_SENABLE(hart) (PLIC + 0x2080 + (hart)*0x100)
 #define PLIC_SPRIORITY(hart) (PLIC + 0x201000 + (hart)*0x2000)
 #define PLIC_SCLAIM(hart) (PLIC + 0x201004 + (hart)*0x2000)
+
+
 
 // the kernel expects there to be RAM
 // for use by the kernel and user pages

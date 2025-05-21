@@ -1,4 +1,11 @@
+// schedular constants to set the scheduling mode
+#define SCHED_ROUND_ROBIN 0
+#define SCHED_FCFS        1
+#define SCHED_PRIORITY    2
+
+extern int sched_mode;  // Declare global scheduler mode
 // Saved registers for kernel context switches.
+
 struct context {
   uint64 ra;
   uint64 sp;
@@ -80,6 +87,13 @@ struct trapframe {
 };
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
+struct proc_metrics {
+  int pid;
+  uint turnaround_time;
+  uint waiting_time;
+};
+
+int get_metrics(struct proc_metrics *metrics_array, int max_entries);
 
 // Per-process state
 struct proc {
@@ -91,6 +105,12 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
+  uint ctime;   // creation time (already added)
+  uint etime;   // end time (when process exits)
+  uint rtime;   // total time spent running on CPU (existing field)
+  uint turnaround_time;
+  uint waiting_time;
+  int priority;
 
   // wait_lock must be held when using this:
   struct proc *parent;         // Parent process
@@ -103,5 +123,6 @@ struct proc {
   struct context context;      // swtch() here to run process
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
-  char name[16];               // Process name (debugging)
+  char name[16];
+
 };

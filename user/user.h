@@ -1,4 +1,22 @@
+#include "kernel/datetime.h"
+#include "kernel/types.h"
+
 struct stat;
+struct avg_t;
+
+// struct stat;
+// struct process_info;
+// struct rtcdate;
+// struct avg_t;
+
+// struct process_info {
+//   int pid;
+//   int ppid;
+//   int state;    // Should match the enum procstate
+//   uint64 sz;
+//   char name[16];
+// };
+
 
 // system calls
 int fork(void);
@@ -22,6 +40,19 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+
+
+//
+int kbdint();
+int countsyscall(void);
+int getppid(void);
+int sysrand(void);
+int datetime(struct datetime*);
+int getptable(int nproc, char *buffer);
+int getavgt(struct avg_t *a);
+int setpriority(int);
+int setsched(int);
+
 
 // ulib.c
 int stat(const char*, struct stat*);

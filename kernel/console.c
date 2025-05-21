@@ -9,6 +9,10 @@
 //   control-p -- print process list
 //
 
+
+// htet el console deh ele bt-handle hetet el interrupt
+
+
 #include <stdarg.h>
 
 #include "types.h"
@@ -43,7 +47,7 @@ consputc(int c)
 
 struct {
   struct spinlock lock;
-  
+
   // input
 #define INPUT_BUF_SIZE 128
   char buf[INPUT_BUF_SIZE];
@@ -126,6 +130,8 @@ consoleread(int user_dst, uint64 dst, int n)
   return target - n;
 }
 
+int kbd_int_count=0;
+
 //
 // the console input interrupt handler.
 // uartintr() calls this for input character.
@@ -135,7 +141,10 @@ consoleread(int user_dst, uint64 dst, int n)
 void
 consoleintr(int c)
 {
+
   acquire(&cons.lock);
+
+  ++kbd_int_count;
 
   switch(c){
   case C('P'):  // Print process list.
@@ -174,7 +183,7 @@ consoleintr(int c)
     }
     break;
   }
-  
+
   release(&cons.lock);
 }
 
